@@ -20,8 +20,10 @@ Using your own authentication system, after a user is authenticated call `api.au
 ### access session data ###
 Session data is added to the connection object for each action.  You can access it like so:
 
-    var user_id = connection.autosession.id;
-    var some_data = connection.autosession.some_data;
+    var user_id = connection.session.id;
+    var some_data = connection.session.some_data;
+
+If you would like to change 'session' to something else, it can be changed in the config file.
     
 ### end a session ###
     api.autosession.kill(token, function(err, result) {
