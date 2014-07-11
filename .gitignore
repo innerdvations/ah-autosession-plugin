@@ -1,0 +1,24 @@
+# local actionhero files
+
+pids/*
+tmp/*
+log/*
+cache/*
+node_modules/*
+
+# Node / NPM 
+npm-debug.log
+
+# OS-specific wierdness
+.DS_Store
+
+# Redis
+dump.rdb
+cache.dump
+
+# Jekyll Site
+_site/*
+
+# Editor-specific
+/nbproject/*
+/.idea/*

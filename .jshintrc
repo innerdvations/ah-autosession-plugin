@@ -1,0 +1,23 @@
+{
+    "node": true,
+    "indent": 2,
+    //"quotmark": true,
+    "bitwise": true,
+    "nonbsp": true,
+    "eqeqeq": true,
+    "eqnull": true,
+    "expr": true,
+    "latedef": true,
+    "onevar": true,
+    "noarg": true,
+    "node": true,
+    "trailing": true,
+    "undef": true,
+    "immed": true,
+    "lastsemic": true,
+    "forin": true,
+    "multistr": true,
+    "unused": "vars", // vars so we can use callbacks that send params we may not use
+    "maxerr": "20",
+    "globals": {}
+}
