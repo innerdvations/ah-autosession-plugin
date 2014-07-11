@@ -12,6 +12,7 @@ The global default can be set in the configuration file, but the default can be 
 
 ### create a session ###
 Using your own authentication system, after a user is authenticated call `api.autosession.createSession`:
+
     // ttl, ip, and app are optional by default
     api.autosession.create(user_id, {ttl:session_lifespan, ip:ip_address, app:app_id}, function(err, tokendata) {
       // tokendata.token can now be sent back to the user
