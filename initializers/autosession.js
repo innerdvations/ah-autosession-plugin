@@ -126,7 +126,7 @@ var autosession = function(api, next){
   };
   
   if(require('semver').lt(require('../../../package').version, '9.0.0')) api.actions.preProcessors.push(api.autosession._on_action);
-  else api.actions.addPreProcessor(api.autosession._on_action, 2);
+  else api.actions.addPreProcessor(api.autosession._on_action, (api.config.autosession.priority ? api.config.autosession.priority : 3));
   
   next();
 };

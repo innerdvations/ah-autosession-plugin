@@ -19,6 +19,7 @@ exports.default = {
         required: "A session token is required to perform this action",
         invalid: "Your session token is invalid",
       },
+      priority: 3, // action preProcessor priority
     };
   }
 };
