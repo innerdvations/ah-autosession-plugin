@@ -2,7 +2,7 @@ exports.default = {
   autosession: function(api){
     return {
       enabled: true,
-      default: "required", // true=load but don't require, false=don't autoload (disable plugin), 'required'=session token required to run action
+      default: true, // true=load but don't require, false=don't autoload (disable plugin), 'required'=session token required to run action
       connection_param: "session", // where will the session data be available in connection object? connection.session
       app_id: "sess", // app id used by redis_sessions
       valid: { // custom regex validators used by redis_sessions
@@ -16,8 +16,8 @@ exports.default = {
       ttl:1000 * 60 * 60 * 24 * 14, // session time to live; 1000 * 60 * 60 * 24 * 14 = two weeks
       token_param: "t", // this is the name of the token parameter added to all actions that use autosession
       error: {
-        required: "token_required",
-        invalid: "token_not_found",
+        required: "A session token is required to perform this action",
+        invalid: "Your session token is invalid",
       },
     };
   }

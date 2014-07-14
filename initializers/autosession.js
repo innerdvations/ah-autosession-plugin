@@ -20,7 +20,7 @@ var autosession = function(api, next){
   };
   api.autosession.set = function(token, data, cb) {
     var s = api.autosession.tkey(token);
-    token.d = data;
+    s.d = data;
     api.autosession.rs.set(s, cb);
   };
   api.autosession.get = function(token, cb) {
