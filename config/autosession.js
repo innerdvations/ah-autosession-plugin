@@ -1,7 +1,6 @@
 exports.default = {
   autosession: function(api){
     return {
-      enabled: true,
       default: true, // true=load but don't require, false=don't autoload (disable plugin), 'required'=session token required to run action
       connection_param: "session", // where will the session data be available in connection object? connection.session
       app_id: "sess", // app id used by redis_sessions
