@@ -53,8 +53,13 @@ Using your own authentication system, after a user is authenticated call `api.au
       // tokendata.token can now be sent back to the user
     });
     
-### set session data ###
-    // data should be an object like `{"unread_msgs": 12,"last_action": "/read/news"}`
+### set/update/delete session data ###
+The data object contains a simple key/value list where values can be string, number, boolean or null.
+
+To remove keys set them to null. 
+
+Keys that are not supplied will not be touched.
+
     api.autosession.set(token, data, function(err, result) {
       // result = all the session data
     });
