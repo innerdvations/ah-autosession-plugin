@@ -53,20 +53,20 @@ Using your own authentication system, after a user is authenticated call `api.au
       // tokendata.token can now be sent back to the user
     });
     
-### access session data ###
-Session data is added to the connection object for each action.  You can access it like so:
-
-    var user_id = connection.session.id;
-    var some_data = connection.session.some_data;
-
-If you would like to change 'session' to something else, it can be changed in the config file.
-    
 ### set session data ###
     // data should be an object like `{"unread_msgs": 12,"last_action": "/read/news"}`
     api.autosession.set(token, data, function(err, result) {
       // result = all the session data
     });
     
+### access session data ###
+Session data is added to the connection object for each action.  You can access it like so:
+
+    var user_id = connection.session.id;
+    var some_data = connection.session.d.some_data; // note that any data stored with .set() is stored in session.d
+
+If you would like to change 'session' to something else, it can be changed in the config file.
+
 ### end a session ###
     api.autosession.kill(token, function(err, result) {
       // result = {kill:1} on success or {kill:0} on failure
