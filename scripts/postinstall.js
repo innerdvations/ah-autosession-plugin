@@ -5,11 +5,11 @@ var path = require('path');
 
 var configDir   = path.normalize(__dirname + '/../config');
 var localFile   = path.normalize(__dirname + '/../config/autosession.js');
-var projectFile = path.normalize(process.cwd() + '/../../config/plugins/ah-autosession-plugin.js');
+var projectFile = path.normalize(__dirname + '/../config/plugins/ah-autosession-plugin.js');
 
 // create config/plugins directory if it doesn't exist
-if(!fs.existsSync(configDir) {
-  fs.mkdirSync(process.cwd() + '/../../config/plugins');
+if(!fs.existsSync(configDir)) {
+  fs.mkdirSync(__dirname + '/../config/plugins');
 }
 
 // copy default config file if it doesn't exist
