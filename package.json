@@ -22,7 +22,7 @@
   "devDependencies": {},
   "optionalDependencies": {},
   "scripts": {
-    "postinstall": "scripts/postinstall.js"
+    "postinstall": "node scripts/postinstall.js"
   },
   "bugs": {
     "url": "https://github.com/innerdvations/ah-autosession-plugin/issues"
