@@ -5,7 +5,7 @@
   },
   "name": "ah-autosession-plugin",
   "description": "Create sessions from any authorization point needed, and load them automatically before calling an action.",
-  "version": "1.0.7",
+  "version": "11.0.0",
   "homepage": "https://github.com/innerdvations/ah-autosession-plugin",
   "repository": {
     "type": "git",
@@ -16,8 +16,7 @@
     "node": ">=0.8.0"
   },
   "dependencies": {
-    "redis-sessions": "*",
-    "semver": "*"
+    "redis-sessions": "*"
   },
   "devDependencies": {},
   "optionalDependencies": {},
