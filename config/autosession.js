@@ -1,10 +1,10 @@
 exports.default = {
-  autosession: function(api){
+  "ah-autosession-plugin": function(api){
     return {
-      name: 'autosession', // middleware name
+      name: 'ah-autosession-plugin', // middleware name
       priority: 20, // middleware priority
       global: true, // middleware global value. if false, must manually specify on each page
-      default_require: false, // true=prevent action if session missing, false=not required (but loaded if exists)
+      default_behaviour: "required", // 'required'=prevent action if session missing, 'load'=load if exists but don't require it, 'off'=don't attempt to load session
       global_override_key: "autosession", // if an action doesn't require it, like login or public page, set action.autosession = false
       connection_param: "session", // where will the session data be available in data object? data.session
       app_id: "sess", // app id used by redis_sessions
@@ -17,10 +17,10 @@ exports.default = {
       },
       prefix: 'ah:sess:', // redis prefix
       ttl:1000 * 60 * 60 * 24 * 14, // session time to live; 1000 * 60 * 60 * 24 * 14 = two weeks
-      token_param: "t", // name of the token parameter added to all actions that use autosession
+      token_param: "t", // this is the name of the token parameter added to all actions that use autosession
       error: {
-        required: "A session token is required to perform this action",
-        invalid: "Your session token is invalid",
+        required: {code:"token_required"},
+        invalid: {code:"token_not_found"},
       },
     };
   }

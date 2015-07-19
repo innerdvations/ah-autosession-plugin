@@ -9,7 +9,7 @@ module.exports = {
     next();
   },
   start: function(api, next){
-    if(!api.config.autosession) return next("missing api.config.autosession");
+    if(!api.config["ah-autosession-plugin"]) return next("missing ah-autosession-plugin config");
     
     var a, i, j, redis = api.redis.client, RedisSessions = require("redis-sessions");
     
@@ -19,7 +19,7 @@ module.exports = {
     api.autosession.create = function(user_id, options, cb) {
       if(!options) options = {};
       if(!options.ip) options.ip = "unknown";
-      if(!options.ttl) options.ttl = api.config.autosession.ttl;
+      if(!options.ttl) options.ttl = api.config["ah-autosession-plugin"].ttl;
       api.autosession.rs.create(api.autosession.idkey(user_id, options.ip, options.ttl), cb);
     };
     api.autosession.kill = function(token, cb) {
@@ -41,62 +41,64 @@ module.exports = {
     
     // helper functions to build rs objects
     api.autosession.tkey = function(token) {
-      return {app:api.config.autosession.app_id, token:token};
+      return {app:api.config["ah-autosession-plugin"].app_id, token:token};
     };
     api.autosession.idkey = function(id, ip, ttl) {
-      return {app:api.config.autosession.app_id,
+      return {app:api.config["ah-autosession-plugin"].app_id,
               id:id,
               ip:(ip ? ip : ""),
-              ttl:(ttl ? ttl : api.config.autosession.ttl),
+              ttl:(ttl ? ttl : api.config["ah-autosession-plugin"].ttl),
       };
     };
     
-    // check if actionTemplate requires our session parameter
+    // check if actionTemplate requires our session parameter to load action
     api.autosession._required = function(actionTemplate) {
-      if(actionTemplate[api.config.autosession.global_override_key]) return actionTemplate[api.config.autosession.global_override_key];
-      
-      if(actionTemplate.inputs[api.config.autosession.token_param]) {
-        if(actionTemplate.inputs[api.config.autosession.token_param].required === true) return true;
-        return false;
+      var key = api.config["ah-autosession-plugin"].global_override_key;
+
+      // this should theoretically always be the logic used, since it's added to each action on startup
+      if(actionTemplate[key] !== null && actionTemplate[key] !== undefined) {
+        return actionTemplate[key] === "required";
       }
       
+      // if it's somehow missing, we can catch it by checking default behaviour
+      if(api.config["ah-autosession-plugin"].default_behaviour == "required") {
+        return true;
+      }
       
-      return api.config.autosession.default_require;
+      return false;
     };
     
     ////// Run setup code
     
     // set up rs object with RedisSessions
-    api.autosession.rs = new RedisSessions({namespace:api.config.autosession.prefix});
-    api.autosession.rs._VALID = api.config.autosession.valid; // replace validator regex array
+    api.autosession.rs = new RedisSessions({namespace:api.config["ah-autosession-plugin"].prefix});
+    api.autosession.rs._VALID = api.config["ah-autosession-plugin"].valid; // replace validator regex array
 
     // add token parameter as optional/required as necessary to each action
     function input_exists(a) {
-      return !!a.inputs[api.config.autosession.token_param];
+      return a.inputs[api.config["ah-autosession-plugin"].token_param] !== null;
     }
     for(i in api.actions.actions) { // i = action name (ie, "status")
-      for(j in api.actions.actions[i]) { // j = 
+      // j = index of each version(?) of the action
+      for(j in api.actions.actions[i]) {
         a = api.actions.actions[i][j];
         // if this action doesn't have an explicit action set, use the default
         if(a.autosession === null || a.autosession === undefined) {
-          //api.log("setting autosession for action "+a.name+" to default: "+api.config.autosession.default);
-          a.autosession = api.config.autosession.default_require;
+          a.autosession = api.config["ah-autosession-plugin"].default_behaviour;
         }
         
-        // and now check for real:
-        if(input_exists(a)) {
-          // don't do anything
-          //api.log('Tried adding session token parameter "'+api.config.autosession.token_param+'" to action "'+a.name+'" but it already exists','warning');
-        }
+        // and now create the actual parameter
         // load if available, but not required
-        else if(a.autosession === false) {
-          //api.log("setting autosession for action "+a.name+" to true");
-          a.inputs[api.config.autosession.token_param] = {required:false};
+        if(a.autosession === "required") {
+          a.inputs[api.config["ah-autosession-plugin"].token_param] = {required:true};
         }
         // session data required to continue
-        else if(a.autosession === true ) {
-          //api.log("setting autosession for action "+a.name+" to required");
-          a.inputs[api.config.autosession.token_param] = {required:true};
+        else if(a.autosession === "load" ) {
+          a.inputs[api.config["ah-autosession-plugin"].token_param] = {required:false};
+        }
+        // don't load session data
+        else if(a.autosession === "off" ) {
+          delete a.inputs[api.config["ah-autosession-plugin"].token_param];
         }
       }
     }
@@ -111,25 +113,25 @@ module.exports = {
           required = api.autosession._required(actionTemplate);
       
       // if it's required or (optional and token was sent)
-      token = data.params[api.config.autosession.token_param];
+      token = data.params[api.config["ah-autosession-plugin"].token_param];
       if(!token) {
-        if(required) return mid_next(api.config.autosession.error.required);
+        if(required) return mid_next(api.config["ah-autosession-plugin"].error.required);
         return mid_next();
       }
     
       api.autosession.get(token, function(err, res) {
         if(err) return mid_next(err);
-        if(!res || !res.id) return mid_next(api.config.autosession.error.invalid);
-        data[api.config.autosession.connection_param] = res;
+        if(!res || !res.id) return mid_next(api.config["ah-autosession-plugin"].error.invalid);
+        data[api.config["ah-autosession-plugin"].connection_param] = res;
         return mid_next();
       });
     };
     var middleware = {
-      name: api.config.autosession.name,
-      global: api.config.autosession.global,
-      priority: api.config.autosession.priority,
+      name: api.config["ah-autosession-plugin"].name,
+      global: api.config["ah-autosession-plugin"].global,
+      priority: api.config["ah-autosession-plugin"].priority,
       preProcessor: api.autosession._on_action,
-    }
+    };
     api.actions.addMiddleware(middleware);
     
     next();
