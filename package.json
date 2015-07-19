@@ -3,7 +3,7 @@
     "name": "Ben Irvin",
     "email": "ben@innerdvations.com"
   },
-  "name": "ah-autosession11-plugin",
+  "name": "ah-autosession-plugin",
   "description": "Plugin for ActionHero.js that creates sessions from any authorization point needed, and load them automatically before each action.",
   "version": "11.0.0",
   "homepage": "https://github.com/innerdvations/ah-autosession-plugin",
