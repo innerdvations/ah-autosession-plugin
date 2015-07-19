@@ -4,6 +4,7 @@ Create sessions and load them automatically in connection before actions are cal
 
 ## Compatibility ##
 For Actionhero 8 and 9, use version 1.*
+
 For Actionhero 11, use version 11.*
 
 If upgrading from v1 to v11 or higher, please note that code will need to be updated to reflect usage and config file changes.
@@ -14,6 +15,7 @@ To install, run `npm install ah-autosession-plugin`
 
 A configuration file should then exist at config/plugins/ah-autosession-plugin.js which lists and explains all the plugin options.
     
+````
 exports.default = {
   "ah-autosession-plugin": function(api){
     return {
@@ -41,6 +43,7 @@ exports.default = {
     };
   }
 };
+````
 
 ## Usage ##
 
